@@ -1,0 +1,44 @@
+name: Build and publish manually
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Image version'
+        required: true
+
+jobs:
+  build_and_push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repo 
+        uses: actions/checkout@v2
+      - name: Create and populate config.json file
+        env:
+          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+          DISCORD_CLIENT_ID: ${{ secrets.DISCORD_CLIENT_ID }}
+          DISCORD_GUILD_ID: ${{ secrets.DISCORD_GUILD_ID }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          cat <<EOF > config.json
+          {
+              "DISCORD_TOKEN": "$DISCORD_TOKEN",
+              "DISCORD_CLIENT_ID": "$DISCORD_CLIENT_ID",
+              "DISCORD_GUILD_ID": "$DISCORD_GUILD_ID",
+              "OPENAI_API_KEY": "$OPENAI_API_KEY"
+          }
+          EOF
+      - name: Build image 
+        run: docker build -t ai-stuff-registry/ai-tool-bot .
+      - name: Install doctl 
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      - name: Log in to DO Container Registry 
+        run: doctl registry login --expiry-seconds 600
+      - name: Tag image 
+        run:
+          docker tag ai-stuff-registry/ai-tool-bot \
+          registry.digitalocean.com/ai-stuff-registry/ai-tool-bot:${{github.event.inputs.version }}
+      - name: Push image to DO Container Registry 
+        run: docker push registry.digitalocean.com/ai-stuff-registry/ai-tool-bot:${{ github.event.inputs.version }}

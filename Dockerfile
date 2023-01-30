@@ -7,4 +7,4 @@ ADD . /opt/app/
 RUN set -eax \
     && npm install
 
-ENTRYPOINT ["node", "index.js"]
+ENTRYPOINT ["npm"]

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "deploy": "node deploy-commads.js"
+    "deploy": "node deploy-commands.js"
   },
   "repository": {
     "type": "git",

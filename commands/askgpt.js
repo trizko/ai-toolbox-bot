@@ -39,7 +39,7 @@ module.exports = {
 		})
 		.catch(error => {
 			console.error(error);
-			interaction.reply("An error occurred while communicating with the GPT-3 API. Please try again later.");
+			interaction.editReply("An error occurred while communicating with the GPT-3 API. Please try again later.");
 		});
 	},
 };

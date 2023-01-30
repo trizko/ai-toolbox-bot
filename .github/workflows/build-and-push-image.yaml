@@ -60,5 +60,5 @@ jobs:
         run: |
           doctl compute ssh ai-tool-bot-droplet \
             --ssh-user ai-tool-bot \
-            --ssh-key id_key \
+            --ssh-key-path id_key \
             --ssh-command "sudo systemctl restart ai-tool-bot"

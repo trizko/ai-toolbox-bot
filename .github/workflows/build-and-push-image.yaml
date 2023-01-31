@@ -1,11 +1,9 @@
 name: Build and publish manually
 
 on:
-  workflow_dispatch:
-    inputs:
-      version:
-        description: 'Image version'
-        required: true
+  push:
+    branches:
+      - main
 
 jobs:
   build_and_push:
@@ -42,11 +40,10 @@ jobs:
         run: doctl registry login --expiry-seconds 600
 
       - name: Tag image 
-        run: |
-          docker tag ai-stuff-registry/ai-tool-bot registry.digitalocean.com/ai-stuff-registry/ai-tool-bot:${{github.event.inputs.version }}
+        run: docker tag ai-stuff-registry/ai-tool-bot registry.digitalocean.com/ai-stuff-registry/ai-tool-bot:latest
 
       - name: Push image to DO Container Registry 
-        run: docker push registry.digitalocean.com/ai-stuff-registry/ai-tool-bot:${{ github.event.inputs.version }}
+        run: docker push registry.digitalocean.com/ai-stuff-registry/ai-tool-bot:latest
 
       - name: Configure SSH
         env:
@@ -68,10 +65,8 @@ jobs:
           EOF
 
       - name: Stop ai-tool-bot service
-        run: |
-          ssh ai-tool-bot-droplet 'sudo systemctl stop ai-tool-bot'
+        run: ssh ai-tool-bot-droplet 'sudo systemctl stop ai-tool-bot'
 
       - name: Start ai-tool-bot service
-        run: |
-          ssh ai-tool-bot-droplet 'sudo systemctl start ai-tool-bot'
+        run: ssh ai-tool-bot-droplet 'sudo systemctl start ai-tool-bot'
 

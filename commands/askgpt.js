@@ -18,7 +18,11 @@ module.exports = {
 
 		const contextFileName = `${interaction.user.username}-${interaction.user.discriminator}.log`;
 		const contextFile = await fs.open(contextFileName, 'a+');
-		const buf = await contextFile.read();
+		let buf = await contextFile.read();
+		if (buf.bytesRead === 0) {
+			contextFile.write("This is a conversation with an AI that formats all it's responses in Markdown.\n\n")
+			buf = await contextFile.read()
+		}
 		const preprompt = buf.buffer.slice(0, buf.bytesRead).toString('utf-8');
 		const prompt = interaction.options.getString("prompt");
 

@@ -1,11 +1,15 @@
 const axios = require("axios");
 const { SlashCommandBuilder } = require('discord.js');
 const { OPENAI_API_KEY } = require('../config.json');
+const fs = require('fs').promises;
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('askgpt')
 		.setDescription('Prompt ChatGPT for answers through the OpenAI API')
+        .addBooleanOption(option =>
+            option.setName('keepcontext')
+                .setDescription('keep context from past conversation'))
 		.addStringOption(option =>
 			option.setName('prompt')
 				.setDescription('The prompt to send to ChatGPT')),
@@ -14,16 +18,25 @@ module.exports = {
 			'Content-Type': 'application/json',
 			'Authorization': `Bearer ${OPENAI_API_KEY}`,
 		};
-		
+		let preprompt_buf, preprompt;
+		if (interaction.options.getBoolean('keepcontext')){
+			preprompt_buf = await fs.readFile('log.txt');
+		}
+		else{
+			await fs.writeFile('log.txt', '');
+			preprompt_buf = '';
+			preprompt = '';
+		}
+		preprompt = preprompt_buf.toString('utf-8');
 		const data = {
 			model: 'text-davinci-003',
-			prompt: interaction.options.getString('prompt'),
+			prompt: (preprompt + interaction.options.getString('prompt')),
 			temperature: 0.5,
 			max_tokens: 500,
 			top_p: 1,
 			frequency_penalty: 0.0,
 			presence_penalty: 0.0,
-			echo: true
+			echo: false
 		};
 
 		interaction.reply("Working on it...")
@@ -35,7 +48,8 @@ module.exports = {
 		})
 		.then(response => {
 			const generatedText = response.data.choices[0].text;
-			interaction.editReply(generatedText);
+			interaction.editReply(interaction.options.getString('prompt') + generatedText);
+			fs.appendFile('log.txt', generatedText + '\n\n');
 		})
 		.catch(error => {
 			console.error(error);

@@ -18,23 +18,25 @@ module.exports = {
 			'Content-Type': 'application/json',
 			'Authorization': `Bearer ${OPENAI_API_KEY}`,
 		};
-		var prePrompt;
+		let preprompt_buf, preprompt;
 		if (interaction.options.getBoolean('keepcontext')){
-			preprompt = await fs.readFile('log.txt', 'utf-8');
+			preprompt_buf = await fs.readFile('log.txt');
 		}
 		else{
-			await fs.writeFile('log.txt', '',);
-			prePrompt = '';
+			await fs.writeFile('log.txt', '');
+			preprompt_buf = '';
+			preprompt = '';
 		}
+		preprompt = preprompt_buf.toString('utf-8');
 		const data = {
 			model: 'text-davinci-003',
-			prompt: (prePrompt + interaction.options.getString('prompt')),
+			prompt: (preprompt + interaction.options.getString('prompt')),
 			temperature: 0.5,
 			max_tokens: 500,
 			top_p: 1,
 			frequency_penalty: 0.0,
 			presence_penalty: 0.0,
-			echo: true
+			echo: false
 		};
 
 		interaction.reply("Working on it...")
@@ -46,8 +48,8 @@ module.exports = {
 		})
 		.then(response => {
 			const generatedText = response.data.choices[0].text;
-			interaction.editReply(generatedText);
-			fs.appendFile('log.txt', generatedText);
+			interaction.editReply(interaction.options.getString('prompt') + generatedText);
+			fs.appendFile('log.txt', generatedText + '\n\n');
 		})
 		.catch(error => {
 			console.error(error);

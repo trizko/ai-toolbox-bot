@@ -3,7 +3,7 @@ import { SlashCommandBuilder } from 'discord.js';
 import config from '../config.json' assert { type: 'json' };
 import { open } from 'fs/promises';
 
-module.exports = {
+export default {
 	data: new SlashCommandBuilder()
 		.setName('askgpt')
 		.setDescription('Prompt ChatGPT for answers through the OpenAI API')

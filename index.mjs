@@ -20,7 +20,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const commandsPath = join(__dirname, 'commands');
 const commandFiles = readdirSync(commandsPath).filter((file) =>
-	file.endsWith('.js')
+	file.endsWith('.mjs')
 );
 
 for (const file of commandFiles) {

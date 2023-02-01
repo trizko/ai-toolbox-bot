@@ -4,4 +4,4 @@
 **/.hg
 **/node_modules
 **/.github
-.package-lock.json
+package-lock.json

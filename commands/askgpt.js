@@ -7,9 +7,11 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('askgpt')
 		.setDescription('Prompt ChatGPT for answers through the OpenAI API')
-		.addStringOption(option =>
-			option.setName('prompt')
-				.setDescription('The prompt to send to ChatGPT')),
+		.addStringOption((option) =>
+			option
+				.setName('prompt')
+				.setDescription('The prompt to send to ChatGPT')
+		),
 	async execute(interaction) {
 		const headers = {
 			'Content-Type': 'application/json',
@@ -20,15 +22,19 @@ module.exports = {
 		const contextFile = await open(contextFileName, 'a+');
 		let buf = await contextFile.read();
 		if (buf.bytesRead === 0) {
-			contextFile.write("This is a conversation with an AI that formats all it's responses in Markdown.\n\n")
-			buf = await contextFile.read()
+			contextFile.write(
+				"This is a conversation with an AI that formats all it's responses in Markdown.\n\n"
+			);
+			buf = await contextFile.read();
 		}
-		const preprompt = buf.buffer.subarray(0, buf.bytesRead).toString('utf-8');
-		const prompt = interaction.options.getString("prompt");
+		const preprompt = buf.buffer
+			.subarray(0, buf.bytesRead)
+			.toString('utf-8');
+		const prompt = interaction.options.getString('prompt');
 
 		const data = {
 			model: 'text-davinci-003',
-			prompt: (preprompt + prompt),
+			prompt: preprompt + prompt,
 			temperature: 0.5,
 			max_tokens: 500,
 			top_p: 1,
@@ -44,15 +50,17 @@ module.exports = {
 			data: data,
 			headers: headers
 		})
-		.then(async response => {
-			const generatedText = response.data.choices[0].text;
-			interaction.editReply(prompt + generatedText);
-			await contextFile.write(prompt + generatedText + '\n\n');
-			await contextFile.close();
-		})
-		.catch(error => {
-			console.error(error);
-			interaction.editReply("An error occurred while communicating with the GPT-3 API. Please try again later.");
-		});
-	},
+			.then(async (response) => {
+				const generatedText = response.data.choices[0].text;
+				interaction.editReply(prompt + generatedText);
+				await contextFile.write(prompt + generatedText + '\n\n');
+				await contextFile.close();
+			})
+			.catch((error) => {
+				console.error(error);
+				interaction.editReply(
+					'An error occurred while communicating with the GPT-3 API. Please try again later.'
+				);
+			});
+	}
 };

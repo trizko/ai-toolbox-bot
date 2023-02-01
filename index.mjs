@@ -3,7 +3,8 @@ import { join } from 'node:path';
 import { Client, Collection, Events, GatewayIntentBits } from 'discord.js';
 import config from './config.json' assert { type: 'json' };
 import path from 'path';
-import { fileURLToPath } from 'url';
+import { createRequire } from 'module';
+import { fileURLToPath, pathToFileURL } from 'url';
 
 const client = new Client({
 	intents: [
@@ -25,8 +26,9 @@ const commandFiles = readdirSync(commandsPath).filter((file) =>
 
 for (const file of commandFiles) {
 	const filePath = join(commandsPath, file);
+	const { resolve } = createRequire(import.meta.url);
 
-	import(filePath).then((command) => {
+	await import(pathToFileURL(resolve(filePath)).toString()).then((command) => {
 		// Set a new item in the Collection with the key as the command name and the value as the exported module
 		if ('data' in command && 'execute' in command) {
 			client.commands.set(command.data.name, command);
@@ -35,7 +37,7 @@ for (const file of commandFiles) {
 				`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`
 			);
 		}
-	})
+	});
 
 }
 

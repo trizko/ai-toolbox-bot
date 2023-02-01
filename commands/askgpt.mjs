@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { SlashCommandBuilder } from 'discord.js';
-import { OPENAI_API_KEY } from '../config.json';
+import config from '../config.json' assert { type: 'json' };
 import { open } from 'fs/promises';
 
 module.exports = {
@@ -15,7 +15,7 @@ module.exports = {
 	async execute(interaction) {
 		const headers = {
 			'Content-Type': 'application/json',
-			Authorization: `Bearer ${OPENAI_API_KEY}`
+			Authorization: `Bearer ${config.OPENAI_API_KEY}`
 		};
 
 		const contextFileName = `${interaction.user.username}-${interaction.user.discriminator}.log`;

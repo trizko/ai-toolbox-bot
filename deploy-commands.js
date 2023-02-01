@@ -5,7 +5,7 @@ import { readdirSync } from 'node:fs';
 const commands = [];
 // Grab all the command files from the commands directory you created earlier
 const commandFiles = readdirSync('./commands').filter((file) =>
-	file.endsWith('.js')
+	file.endsWith('.mjs')
 );
 
 // Grab the SlashCommandBuilder#toJSON() output of each command's data for deployment

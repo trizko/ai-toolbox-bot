@@ -1,11 +1,12 @@
 {
-	"name": "gi-bot",
+	"name": "ai-bot",
 	"version": "1.0.0",
 	"description": "discord server bot for interacting with ai",
-	"main": "index.js",
+	"main": "index.mjs",
+	"type": "module",
 	"scripts": {
-		"start": "node index.js",
-		"deploy": "node deploy-commands.js"
+		"start": "node index.mjs",
+		"deploy": "node deploy-commands.mjs"
 	},
 	"repository": {
 		"type": "git",

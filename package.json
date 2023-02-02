@@ -1,26 +1,30 @@
 {
-  "name": "gi-bot",
-  "version": "1.0.0",
-  "description": "discord server bot for interacting with ai",
-  "main": "index.js",
-  "scripts": {
-    "start": "node index.js",
-    "deploy": "node deploy-commands.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "github.com/trizko/gi-bot"
-  },
-  "keywords": [
-    "chatgpt",
-    "chatbot",
-    "ai",
-    "ml"
-  ],
-  "author": "Tony Rizko",
-  "license": "MIT",
-  "dependencies": {
-    "axios": "^1.2.2",
-    "discord.js": "^14.7.1"
-  }
+	"name": "ai-bot",
+	"version": "1.0.0",
+	"description": "discord server bot for interacting with ai",
+	"main": "index.mjs",
+	"type": "module",
+	"scripts": {
+		"start": "node index.mjs",
+		"deploy": "node deploy-commands.mjs"
+	},
+	"repository": {
+		"type": "git",
+		"url": "github.com/trizko/gi-bot"
+	},
+	"keywords": [
+		"chatgpt",
+		"chatbot",
+		"ai",
+		"ml"
+	],
+	"author": "Tony Rizko",
+	"license": "MIT",
+	"dependencies": {
+		"axios": "^1.2.2",
+		"discord.js": "^14.7.1"
+	},
+	"devDependencies": {
+		"prettier": "2.8.3"
+	}
 }

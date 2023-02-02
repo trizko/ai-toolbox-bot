@@ -21,7 +21,7 @@ export default {
 			.catch((error) => {
 				console.error(error);
 				interaction.editReply(
-					'Error occured when attempting to clear your context file. (Your context file may not exist.'
+					'Error occured when attempting to clear your context file. (Your context file may not exist)'
 				);
 			});
 	}

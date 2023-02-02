@@ -28,10 +28,10 @@ for (const file of commandFiles) {
 	const filePath = join(commandsPath, file);
 	const { resolve } = createRequire(import.meta.url);
 
-	await import(pathToFileURL(resolve(filePath)).toString()).then((command) => {
+	import(pathToFileURL(resolve(filePath))).then((command) => {
 		// Set a new item in the Collection with the key as the command name and the value as the exported module
-		if ('data' in command && 'execute' in command) {
-			client.commands.set(command.data.name, command);
+		if ('data' in command.default && 'execute' in command.default) {
+			client.commands.set(command.default.data.name, command.default);
 		} else {
 			console.log(
 				`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`

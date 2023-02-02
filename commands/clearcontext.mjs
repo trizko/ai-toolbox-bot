@@ -11,7 +11,7 @@ export default {
 		await interaction
 			.reply('Clearing context...')
 			.then(async () => {
-				await fs.rm(contextFileName);
+				await rm(contextFileName);
 			})
 			.then(async () => {
 				await interaction.editReply(

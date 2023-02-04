@@ -6,7 +6,9 @@
 	"type": "module",
 	"scripts": {
 		"start": "node index.mjs",
-		"deploy": "node deploy-commands.mjs"
+		"deploy": "node deploy-commands.mjs",
+		"check-fmt": "npx prettier --check .",
+		"fmt": "npx prettier --write ."
 	},
 	"repository": {
 		"type": "git",

@@ -26,13 +26,16 @@ $ cp config.json.template config.json
 Once that is done, run the following commands in the root directory:
 ```
 # build the docker image
-$ docker build -t ai-tool-bot .
+$ ./run.sh build
 
 # deploy the commands in the commands directory
-$ docker run -it --rm --pid=host ai-tool-bot run deploy
+$ ./run.sh deploy
 
 # run the bot
-$ docker run -it --rm --pid=host ai-tool-bot run start
+$ ./run.sh start
+
+# for full list of commands for `./run.sh`, use the `help` command
+$ ./run.sh help
 ```
 
 ## Deployment

@@ -8,6 +8,7 @@ Usage:
     ./run.sh COMMAND
 
 Commands:
+    all     run the build, deploy, and start commands in that order
     build   build the docker image for this repo
     check   check if files have been formatted
     deploy  deploy the bot commands to discord
@@ -23,6 +24,14 @@ do
     case $key in
         help)
             echo "$help_message"
+            exit
+            ;;
+        all)
+            docker stop $(docker ps -aq)
+            docker rm $(docker ps -aq)
+            docker build -t ai-tool-bot .
+            docker run --rm ai-tool-bot run deploy
+            docker run --rm --pid=host ai-tool-bot run start
             exit
             ;;
         build)
@@ -43,6 +52,10 @@ do
             ;;
         start)
             docker run -it --rm --pid=host ai-tool-bot run start
+            exit
+            ;;
+        watch)
+            fswatch -o ./ || xargs -n1 -I{} ./run.sh all
             exit
             ;;
         *)

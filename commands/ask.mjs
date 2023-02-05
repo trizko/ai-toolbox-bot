@@ -5,32 +5,31 @@ import { open } from 'fs/promises';
 
 export default {
 	data: new SlashCommandBuilder()
-		.setName('askgpt')
-		.setDescription('Prompt ChatGPT for answers through the OpenAI API')
+		.setName('ask')
+		.setDescription('Prompt the OpenAI LLM for completions')
 		.addStringOption((option) =>
-			option
-				.setName('prompt')
-				.setDescription('The prompt to send to ChatGPT')
+			option.setName('prompt').setDescription('The prompt to send')
 		),
 	async execute(interaction) {
-		const headers = {
-			'Content-Type': 'application/json',
-			Authorization: `Bearer ${config.OPENAI_API_KEY}`
-		};
-
 		const contextFileName = `${interaction.user.username}-${interaction.user.discriminator}.log`;
 		const contextFile = await open(contextFileName, 'a+');
 		let buf = await contextFile.read();
 		if (buf.bytesRead === 0) {
 			contextFile.write(
-				"This is a conversation with an AI that formats all it's responses in Markdown.\n\n"
+				"The following is a conversation with an AI assistant. The assistant is helpful, creative, clever, and very friendly. The assistant always formats all programming question responses in Markdown format:\n\n"
 			);
 			buf = await contextFile.read();
 		}
+		
 		const preprompt = buf.buffer
 			.subarray(0, buf.bytesRead)
 			.toString('utf-8');
 		const prompt = interaction.options.getString('prompt');
+
+		const headers = {
+			'Content-Type': 'application/json',
+			Authorization: `Bearer ${config.OPENAI_API_KEY}`
+		};
 
 		const data = {
 			model: 'text-davinci-003',

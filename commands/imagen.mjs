@@ -13,7 +13,7 @@ export default {
 		),
 	async execute(interaction) {
 		const prompt = interaction.options.getString('prompt');
-		
+
 		const headers = {
 			'Content-Type': 'application/json',
 			Authorization: `Bearer ${config.OPENAI_API_KEY}`

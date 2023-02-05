@@ -16,11 +16,11 @@ export default {
 		let buf = await contextFile.read();
 		if (buf.bytesRead === 0) {
 			contextFile.write(
-				"The following is a conversation with an AI assistant. The assistant is helpful, creative, clever, and very friendly. The assistant always formats all programming question responses in Markdown format:\n\n"
+				'The following is a conversation with an AI assistant. The assistant is helpful, creative, clever, and very friendly. The assistant always formats all programming question responses in Markdown format:\n\n'
 			);
 			buf = await contextFile.read();
 		}
-		
+
 		const preprompt = buf.buffer
 			.subarray(0, buf.bytesRead)
 			.toString('utf-8');

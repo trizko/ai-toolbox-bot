@@ -29,29 +29,29 @@ do
         all)
             docker stop $(docker ps -aq)
             docker rm $(docker ps -aq)
-            docker build -t ai-tool-bot .
-            docker run --rm ai-tool-bot run deploy
-            docker run --rm --pid=host ai-tool-bot run start
+            docker build -t ai-toolbox-bot .
+            docker run --rm ai-toolbox-bot run deploy
+            docker run --rm --pid=host ai-toolbox-bot run start
             exit
             ;;
         build)
-            docker build -t ai-tool-bot .
+            docker build -t ai-toolbox-bot .
             exit
             ;;
         check)
-            docker run --rm -v $(pwd):/opt/app/ ai-tool-bot run check-fmt
+            docker run --rm -v $(pwd):/opt/app/ ai-toolbox-bot run check-fmt
             exit
             ;;
         deploy)
-            docker run --rm ai-tool-bot run deploy
+            docker run --rm ai-toolbox-bot run deploy
             exit
             ;;
         fmt)
-            docker run --rm -v $(pwd):/opt/app/ ai-tool-bot run fmt
+            docker run --rm -v $(pwd):/opt/app/ ai-toolbox-bot run fmt
             exit
             ;;
         start)
-            docker run -it --rm --pid=host ai-tool-bot run start
+            docker run -it --rm --pid=host ai-toolbox-bot run start
             exit
             ;;
         watch)

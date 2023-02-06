@@ -6,7 +6,7 @@ set -euxo pipefail
 ########################
 
 # Name of the user to create and grant sudo privileges
-USERNAME=ai-tool-bot
+USERNAME=ai-toolbox-bot
 
 # Whether to copy over the root user's `authorized_keys` file to the new sudo
 # user.
@@ -18,7 +18,7 @@ COPY_AUTHORIZED_KEYS_FROM_ROOT=true
 #     "ssh-rsa AAAAB..."
 # )
 OTHER_PUBLIC_KEYS_TO_ADD=(
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJnwu5yGpoTLCZo68yTjLX6ijbCMrIL4rCyULajrAouz ai-tool-bot-github-actions"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILxc1zbazGm3rrEToP8LvvkWdfjBzlSGAeHG6e/3NEoV ai-toolbox-bot-github-actions"
 )
 
 ####################
@@ -66,16 +66,16 @@ wget -O install_docker.sh get.docker.com
 sh ./install_docker.sh
 docker login -u {{DO_API_KEY}} -p {{DO_API_KEY}} registry.digitalocean.com
 
-# Create systemd files for managing ai-tool-bot docker container
-cat <<EOF > /etc/systemd/system/ai-tool-bot.service
+# Create systemd files for managing ai-toolbox-bot docker container
+cat <<EOF > /etc/systemd/system/ai-toolbox-bot.service
 [Unit]
-Description=ai-tool-bot
+Description=ai-toolbox-bot
 
 [Service]
-ExecStartPre=docker pull registry.digitalocean.com/ai-stuff-registry/ai-tool-bot:latest
-ExecStartPre=docker run --rm --name=ai-tool-bot-deploy registry.digitalocean.com/ai-stuff-registry/ai-tool-bot:latest run deploy
-ExecStart=docker run --rm --name=ai-tool-bot-start registry.digitalocean.com/ai-stuff-registry/ai-tool-bot:latest run start
-ExecStop=docker stop ai-tool-bot-start
+ExecStartPre=docker pull registry.digitalocean.com/ai-stuff-registry/ai-toolbox-bot:latest
+ExecStartPre=docker run --rm --name=ai-toolbox-bot-deploy registry.digitalocean.com/ai-stuff-registry/ai-toolbox-bot:latest run deploy
+ExecStart=docker run --rm --name=ai-toolbox-bot-start registry.digitalocean.com/ai-stuff-registry/ai-toolbox-bot:latest run start
+ExecStop=docker stop ai-toolbox-bot-start
 User=root
 
 Restart=always

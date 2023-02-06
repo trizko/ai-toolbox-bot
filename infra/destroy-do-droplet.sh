@@ -1,4 +1,4 @@
 #!/bin/bash
 set -euo pipefail
 
-doctl compute droplet delete --force ai-tool-bot-droplet
+doctl compute droplet delete --force ai-toolbox-bot-droplet

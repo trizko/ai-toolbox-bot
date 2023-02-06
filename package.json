@@ -1,7 +1,7 @@
 {
-	"name": "ai-bot",
+	"name": "ai-toolbox-bot",
 	"version": "1.0.0",
-	"description": "discord server bot for interacting with ai",
+	"description": "discord server bot for interacting with ai tooling",
 	"main": "index.mjs",
 	"type": "module",
 	"scripts": {
@@ -12,10 +12,9 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "github.com/trizko/gi-bot"
+		"url": "github.com/trizko/ai-toolbox-bot"
 	},
 	"keywords": [
-		"chatgpt",
 		"chatbot",
 		"ai",
 		"ml"

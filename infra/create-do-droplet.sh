@@ -10,4 +10,4 @@ doctl compute droplet create \
     --region sfo3 \
     --ssh-keys ${DO_SSH_FINGERPRINT} \
     --user-data "${USERDATA}" \
-    ai-tool-bot-droplet
+    ai-toolbox-bot-droplet

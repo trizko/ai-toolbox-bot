@@ -29,7 +29,7 @@ jobs:
           EOF
 
       - name: Build image 
-        run: docker build -t ai-stuff-registry/ai-tool-bot .
+        run: docker build -t ai-stuff-registry/ai-toolbox-bot .
 
       - name: Install doctl 
         uses: digitalocean/action-doctl@v2
@@ -40,33 +40,33 @@ jobs:
         run: doctl registry login --expiry-seconds 600
 
       - name: Tag image 
-        run: docker tag ai-stuff-registry/ai-tool-bot registry.digitalocean.com/ai-stuff-registry/ai-tool-bot:latest
+        run: docker tag ai-stuff-registry/ai-toolbox-bot registry.digitalocean.com/ai-stuff-registry/ai-toolbox-bot:latest
 
       - name: Push image to DO Container Registry 
-        run: docker push registry.digitalocean.com/ai-stuff-registry/ai-tool-bot:latest
+        run: docker push registry.digitalocean.com/ai-stuff-registry/ai-toolbox-bot:latest
 
       - name: Configure SSH
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
           mkdir -p ~/.ssh/
-          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ai_tool_bot_droplet.key
-          chmod 600 ~/.ssh/id_ai_tool_bot_droplet.key
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ai_toolbox_bot_droplet.key
+          chmod 600 ~/.ssh/id_ai_toolbox_bot_droplet.key
 
-          export SSH_USER="ai-tool-bot"
-          export SSH_HOST="$(doctl compute droplet get ai-tool-bot-droplet --template {{.PublicIPv4}})"
+          export SSH_USER="ai-toolbox-bot"
+          export SSH_HOST="$(doctl compute droplet get ai-toolbox-bot-droplet --template {{.PublicIPv4}})"
 
           cat <<EOF > ~/.ssh/config
-          Host ai-tool-bot-droplet
+          Host ai-toolbox-bot-droplet
             HostName $SSH_HOST
             User $SSH_USER
-            IdentityFile ~/.ssh/id_ai_tool_bot_droplet.key
+            IdentityFile ~/.ssh/id_ai_toolbox_bot_droplet.key
             StrictHostKeyChecking no
           EOF
 
-      - name: Stop ai-tool-bot service
-        run: ssh ai-tool-bot-droplet 'sudo systemctl stop ai-tool-bot'
+      - name: Stop ai-toolbox-bot service
+        run: ssh ai-toolbox-bot-droplet 'sudo systemctl stop ai-toolbox-bot'
 
-      - name: Start ai-tool-bot service
-        run: ssh ai-tool-bot-droplet 'sudo systemctl start ai-tool-bot'
+      - name: Start ai-toolbox-bot service
+        run: ssh ai-toolbox-bot-droplet 'sudo systemctl start ai-toolbox-bot'
 

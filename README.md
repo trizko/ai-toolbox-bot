@@ -1,4 +1,4 @@
-# ai-tool-bot
+# ai-toolbox-bot
 
 A Discord bot with commands for prompting the OpenAI API.
 

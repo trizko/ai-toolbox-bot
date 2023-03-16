@@ -5,8 +5,8 @@
 	"main": "index.mjs",
 	"type": "module",
 	"scripts": {
-		"start": "node index.mjs",
-		"deploy": "node deploy-commands.mjs",
+		"start": "node --no-warnings index.mjs",
+		"deploy": "node --no-warnings deploy-commands.mjs",
 		"check-fmt": "npx prettier --check .",
 		"fmt": "npx prettier --write ."
 	},

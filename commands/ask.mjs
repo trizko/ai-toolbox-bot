@@ -3,6 +3,14 @@ import { SlashCommandBuilder } from 'discord.js';
 import config from '../config.json' assert { type: 'json' };
 import { open } from 'fs/promises';
 
+const MODEL_ENGINE = 'text-davinci-003';
+const PREPROMPT = `As an advanced chatbot, your primary goal is to assist users to the best of your ability. This may involve answering questions, providing helpful information, or completing tasks based on user input. In order to effectively assist users, it is important to be detailed and thorough in your responses. Use examples and evidence to support your points and justify your recommendations or solutions. All your responses should be formatted in Markdown.
+
+<context>
+
+User: <user_prompt>
+Chatbot: `;
+
 export default {
 	data: new SlashCommandBuilder()
 		.setName('ask')
@@ -14,17 +22,12 @@ export default {
 		const contextFileName = `${interaction.user.username}-${interaction.user.discriminator}.log`;
 		const contextFile = await open(contextFileName, 'a+');
 		let buf = await contextFile.read();
-		if (buf.bytesRead === 0) {
-			contextFile.write(
-				'The following is a conversation with an AI assistant. The assistant is helpful, creative, clever, and very friendly. The assistant always formats all programming question responses in Markdown format:\n\n'
-			);
-			buf = await contextFile.read();
-		}
-
-		const preprompt = buf.buffer
-			.subarray(0, buf.bytesRead)
-			.toString('utf-8');
-		const prompt = interaction.options.getString('prompt');
+		const context = buf.buffer.subarray(0, buf.bytesRead).toString('utf-8');
+		const userPrompt = interaction.options.getString('prompt');
+		const prompt = PREPROMPT.replace('<context>', context).replace(
+			'<user_prompt>',
+			userPrompt
+		);
 
 		const headers = {
 			'Content-Type': 'application/json',
@@ -32,10 +35,10 @@ export default {
 		};
 
 		const data = {
-			model: 'text-davinci-003',
-			prompt: preprompt + prompt,
+			model: MODEL_ENGINE,
+			prompt: prompt,
 			temperature: 0.5,
-			max_tokens: 500,
+			max_tokens: 2048,
 			top_p: 1,
 			frequency_penalty: 0.0,
 			presence_penalty: 0.0,
@@ -50,13 +53,17 @@ export default {
 			headers: headers
 		})
 			.then(async (response) => {
-				const generatedText = response.data.choices[0].text;
-				interaction.editReply(prompt + generatedText);
-				await contextFile.write(prompt + generatedText + '\n\n');
+				const generatedText = response.data.choices[0].text.trim();
+				interaction.editReply(
+					`Q: ${userPrompt}\n---\nA: ${generatedText}`
+				);
+				await contextFile.write(
+					`User: ${userPrompt}\nChatbot: ${generatedText}`
+				);
 				await contextFile.close();
 			})
 			.catch((error) => {
-				console.error(error);
+				console.error(JSON.stringify(error.response.data));
 				interaction.editReply(
 					'An error occurred while communicating with the GPT-3 API. Please try again later.'
 				);

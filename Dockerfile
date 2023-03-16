@@ -1,5 +1,8 @@
 FROM node:18.13.0-alpine3.17
 
+# update npm
+RUN npm install -g npm@9.6.2
+
 # use changes to package.json to force Docker not to use the cache
 # when we change our application's nodejs dependencies:
 COPY package.json /tmp/package.json

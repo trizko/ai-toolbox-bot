@@ -27,8 +27,8 @@ do
             exit
             ;;
         all)
-            docker stop $(docker ps -aq)
-            docker rm $(docker ps -aq)
+            docker stop $(docker ps -aq) 2> /dev/null
+            docker rm $(docker ps -aq) 2> /dev/null
             docker build -t ai-toolbox-bot .
             docker run --rm ai-toolbox-bot run deploy
             docker run --rm --pid=host ai-toolbox-bot run start

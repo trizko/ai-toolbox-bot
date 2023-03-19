@@ -11,6 +11,27 @@ const PREPROMPT = `As an advanced chatbot, your primary goal is to assist users 
 User: <user_prompt>
 Chatbot: `;
 
+function splitLongString(str, splitKey, chunkSize) {
+	const lastNewlineIndex = str.lastIndexOf(splitKey, chunkSize);
+	const chunks = [];
+
+	if (lastNewlineIndex !== -1) {
+		chunks.push(str.slice(0, lastNewlineIndex));
+		str = str.slice(lastNewlineIndex + splitKey.length);
+	}
+
+	while (str.length > chunkSize) {
+		const nextNewlineIndex = str.indexOf(splitKey, chunkSize);
+		if (nextNewlineIndex === -1) break;
+		chunks.push(str.slice(0, nextNewlineIndex));
+		str = str.slice(nextNewlineIndex + splitKey.length);
+	}
+
+	chunks.push(str);
+
+	return chunks;
+}
+
 export default {
 	data: new SlashCommandBuilder()
 		.setName('ask')
@@ -19,6 +40,8 @@ export default {
 			option.setName('prompt').setDescription('The prompt to send')
 		),
 	async execute(interaction) {
+		interaction.deferReply();
+
 		const contextFileName = `${interaction.user.username}-${interaction.user.discriminator}.log`;
 		const contextFile = await open(contextFileName, 'a+');
 		let buf = await contextFile.read();
@@ -45,7 +68,6 @@ export default {
 			echo: false
 		};
 
-		interaction.reply('Working on it...');
 		await axios({
 			method: 'post',
 			url: 'https://api.openai.com/v1/completions',
@@ -54,9 +76,16 @@ export default {
 		})
 			.then(async (response) => {
 				const generatedText = response.data.choices[0].text.trim();
-				interaction.editReply(
-					`Q: ${userPrompt}\n---\nA: ${generatedText}`
-				);
+				const replyMessage = `Q: ${userPrompt}\n---\nA: ${generatedText}`;
+				const chunks = splitLongString(replyMessage, '\n\n', 2000);
+				for (const [index, chunk] of chunks.entries()) {
+					if (index === 0) {
+						interaction.editReply(chunk);
+					} else {
+						await new Promise((r) => setTimeout(r, 1000));
+						interaction.followUp(chunk);
+					}
+				}
 				await contextFile.write(
 					`User: ${userPrompt}\nChatbot: ${generatedText}`
 				);

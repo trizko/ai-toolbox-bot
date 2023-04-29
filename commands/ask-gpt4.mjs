@@ -3,7 +3,8 @@ import { SlashCommandBuilder } from 'discord.js';
 import config from '../config.json' assert { type: 'json' };
 
 const MODEL_ENGINE = 'gpt-4';
-const PREPROMPT = 'As an advanced chatbot, your primary goal is to assist users to the best of your ability. This may involve answering questions, providing helpful information, or completing tasks based on user input. In order to effectively assist users, it is important to be concise in your responses. All your responses should be formatted in Markdown.';
+const PREPROMPT =
+	'As an advanced chatbot, your primary goal is to assist users to the best of your ability. This may involve answering questions, providing helpful information, or completing tasks based on user input. In order to effectively assist users, it is important to be concise in your responses. All your responses should be formatted in Markdown.';
 let MESSAGES_DB = {};
 
 function splitLongString(str, splitKey, chunkSize) {
@@ -41,13 +42,15 @@ export default {
 		const userPrompt = interaction.options.getString('prompt');
 		const message = {
 			role: 'user',
-			content: userPrompt,
+			content: userPrompt
 		};
 		if (!(username in MESSAGES_DB)) {
-			MESSAGES_DB[username] = [{
-				role: 'system',
-				content: PREPROMPT,
-			}];
+			MESSAGES_DB[username] = [
+				{
+					role: 'system',
+					content: PREPROMPT
+				}
+			];
 		}
 		MESSAGES_DB[username].push(message);
 		console.log(MESSAGES_DB);
@@ -64,7 +67,7 @@ export default {
 			max_tokens: 4000,
 			top_p: 1,
 			frequency_penalty: 0.0,
-			presence_penalty: 0.0,
+			presence_penalty: 0.0
 		};
 
 		await axios({
@@ -75,7 +78,8 @@ export default {
 		})
 			.then(async (response) => {
 				console.log(JSON.stringify(response.data));
-				const generatedText = response.data.choices[0].message.content.trim();
+				const generatedText =
+					response.data.choices[0].message.content.trim();
 				const replyMessage = `Q: ${userPrompt}\n---\nA: ${generatedText}`;
 				const chunks = splitLongString(replyMessage, '\n\n', 2000);
 				for (const [index, chunk] of chunks.entries()) {
@@ -88,7 +92,7 @@ export default {
 				}
 				MESSAGES_DB[username].push({
 					role: 'assistant',
-					content: generatedText,
+					content: generatedText
 				});
 			})
 			.catch((error) => {

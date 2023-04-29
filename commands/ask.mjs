@@ -35,7 +35,7 @@ function splitLongString(str, splitKey, chunkSize) {
 export default {
 	data: new SlashCommandBuilder()
 		.setName('ask')
-		.setDescription('Prompt the OpenAI LLM for completions')
+		.setDescription('Prompt the text-davinci-003 LLM for completions')
 		.addStringOption((option) =>
 			option.setName('prompt').setDescription('The prompt to send')
 		),

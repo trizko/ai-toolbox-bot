@@ -1,6 +1,7 @@
 # ai-toolbox-bot
-![ci-job](https://github.com/trizko/ai-toolbox-bot/actions/workflows/ci-job.yml/badge.svg)
-![cd-job](https://github.com/trizko/ai-toolbox-bot/actions/workflows/cd-job.yml/badge.svg)
+
+![ci-job](https://github.com/trizko/ai-toolbox-bot/actions/workflows/ci-job.yaml/badge.svg)
+![cd-job](https://github.com/trizko/ai-toolbox-bot/actions/workflows/cd-job.yaml/badge.svg)
 
 A Discord bot with commands for prompting the OpenAI API.
 

@@ -37,7 +37,10 @@ export default {
 		.setName('ask')
 		.setDescription('Prompt the text-davinci-003 LLM for completions')
 		.addStringOption((option) =>
-			option.setName('prompt').setDescription('The prompt to send')
+			option
+				.setName('prompt')
+				.setDescription('The prompt to send')
+				.setRequired(true)
 		),
 	async execute(interaction) {
 		interaction.deferReply();

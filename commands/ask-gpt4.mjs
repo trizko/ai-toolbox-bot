@@ -33,7 +33,10 @@ export default {
 		.setName('ask-gpt4')
 		.setDescription('Prompt the GPT-4 LLM for completions')
 		.addStringOption((option) =>
-			option.setName('prompt').setDescription('The prompt to send')
+			option
+				.setName('prompt')
+				.setDescription('The prompt to send')
+				.setRequired(true)
 		),
 	async execute(interaction) {
 		interaction.deferReply();

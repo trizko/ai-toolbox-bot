@@ -70,3 +70,5 @@ jobs:
       - name: Start ai-toolbox-bot service
         run: ssh ai-toolbox-bot-droplet 'sudo systemctl start ai-toolbox-bot'
 
+      - name: Clean up DO Container Registry
+        run: doctl registry garbage-collection start --include-untagged-manifests --force

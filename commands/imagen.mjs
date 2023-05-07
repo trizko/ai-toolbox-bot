@@ -10,8 +10,10 @@ export default {
 			option
 				.setName('prompt')
 				.setDescription('The prompt for image generation')
+				.setRequired(true)
 		),
 	async execute(interaction) {
+		await interaction.deferReply();
 		const prompt = interaction.options.getString('prompt');
 
 		const headers = {
@@ -26,7 +28,6 @@ export default {
 			response_format: 'url'
 		};
 
-		interaction.reply(`Generating image from prompt: \`${prompt}\``);
 		await axios({
 			method: 'post',
 			url: 'https://api.openai.com/v1/images/generations',
@@ -35,12 +36,12 @@ export default {
 		})
 			.then(async (response) => {
 				const image = response.data.data[0].url;
-				interaction.editReply(image);
+				await interaction.editReply(image);
 			})
 			.catch((error) => {
-				console.error(error);
+				console.error(JSON.stringify(error));
 				interaction.editReply(
-					'An error occurred while communicating with the GPT-3 API. Please try again later.'
+					'An error occurred while communicating with the DALL-E API. Please try again later.'
 				);
 			});
 	}
